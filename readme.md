@@ -33,11 +33,13 @@ It's ok if you do it once but if you start heavily relying on it, it becomes a b
 Use this plugin to allow webpack to resolve the file variant automatically. 
 It allows, from a single codebase, to customize profoundly the output without awkward conditional code.
 
-Install via npm:
+**Disclaimer:** the caveat is that the custom resolution hides the file you really compile in your project - it may be a source of confusion, so use with care.
+
+### Install via npm:
 
     npm install --save-dev require-variant-webpack-plugin
 
-Update your webpack config:
+### Update your webpack config:
 
 ```javascript
 const RequireVariantPlugin = require('require-variant-webpack-plugin');
@@ -47,7 +49,7 @@ const isFancy = process.env.FANCY;
 
 module.exports = {
   plugins: [
-    new RequireVariantPlugin(['.js'], isDev ? '.dev' : null),
+    new RequireVariantPlugin(['.js', '.jsx'], isDev ? '.dev' : null),
     new RequireVariantPlugin(['.scss'], isFancy ? '_fancy' : null)
   ]
 };
