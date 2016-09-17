@@ -1,28 +1,37 @@
 # Require Variant Plugin
 
-Provide custom `require` resolution to conditionally include file variants.
-
-*Compatible with hot-reload: modifying a file variant will reload as expected.*
-
 ## The problem
 
-Normally, if you want to require (at build time) a different file depending on some conditions, like an environment variable, you have to write this kind of convoluted code:
+Normally, if you want to require a different file (code or resources) depending on some conditions, like an environment variable, you have to write this kind of convoluted code:
 
 ```javascript
-var Code = null;
-if (process.env.FOO) {
-    Code = require('./code.foo');
+var View = null;
+if (process.env.DEV) {
+    View = require('./view.dev'); // ./view.dev.js
 }
 else {
-    Code = require('./code');
+    View = require('./view'); // view.js
 }
 ```
 
-It's ok if you do it once but if you start heavily relying on it, it becomes a burden. 
+or
+
+```javascript
+if (process.env.FANCY) {
+    require('./styles_fancy.scss');
+}
+else {
+    require('./styles.scss');
+}
+```
+
+
+It's ok if you do it once but if you start heavily relying on it, it becomes a burden.
 
 ## The solution
 
-Use this plugin to allow webpack to resolve the file variant automatically.
+Use this plugin to allow webpack to resolve the file variant automatically. 
+It allows, from a single codebase, to customize profoundly the output without awkward conditional code.
 
 Install via npm:
 
@@ -33,33 +42,36 @@ Update your webpack config:
 ```javascript
 const RequireVariantPlugin = require('require-variant-webpack-plugin');
 
-const useFoo = process.env.FOO;
+const isDev = process.env.DEV;
+const isFancy = process.env.FANCY;
 
 module.exports = {
   plugins: [
-    new RequireVariantPlugin(['.js'], useFoo ? '.foo' : null)
+    new RequireVariantPlugin(['.js'], isDev ? '.dev' : null),
+    new RequireVariantPlugin(['.scss'], isFancy ? '_fancy' : null)
   ]
 };
 ```
 
-The plugin simply hooks to the files resolver and modifies the resolved path if a variant exists. 
-Once the path is modified, loaders and features like hot-reload use the variant file as reference.
+The plugin simply hooks to the files resolver and, if a variant exists, modifies the resolved path.
+
+**Everything works as usual:** loaders and features like hot-reload use the variant file as reference.
 
 ## Usage
 
 Run webpack with or without environment vars to select the variant:
 
     # no variant
-    npm run dev
+    npm run build
 
-    // import 'code.js'
-    const Code = require('./code'); 
+    const View = require('./view'); // view.js
+    require('./styles'); // styles.scss
 
     # with variant
-    FOO=true npm run dev
+    FANCY=true npm run dev
 
-    // import 'code.foo.js' if exists, or 'code.js'
-    const Code = require('./code'); 
+    const View = require('./view'); // view.dev.js
+    require('./styles'); // styles_fancy.scss
 
 ## API
 
