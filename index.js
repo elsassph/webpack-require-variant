@@ -22,7 +22,7 @@ function installFilter(compiler, extension, variant, includeNodeModules) {
             && endsWith(request.path, extension) > 0) {
             
             const altPath = replaceExtension(request.path, extension, ending);
-            if (fs.existsSync(altPath)) {
+            if (fs.existsSync(altPath) && altPath != request.context.issuer) {
                 request.path = altPath;
             }
         }
