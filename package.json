@@ -1,6 +1,6 @@
 {
   "name": "require-variant-webpack-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Webpack plugin for custom require resolution ",
   "main": "index.js",
   "scripts": {
