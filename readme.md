@@ -1,4 +1,4 @@
-# Require Variant Plugin
+# Webpack 1.x - Require Variant Plugin
 
 ## The problem
 
